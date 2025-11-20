@@ -1,0 +1,62 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Next.js
+.next
+out
+dist
+build
+
+# Testing
+coverage
+.nyc_output
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Documentation
+README.md
+ARCHITECTURE.md
+docs
+
+# Development files
+docker-compose.yml
+.dockerignore
+Dockerfile
+
+# Database
+*.db
+*.db-journal
+prisma/dev.db
+prisma/migrations
+
+# Demo files
+demo-pages

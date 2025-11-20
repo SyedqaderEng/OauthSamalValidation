@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { hashPassword } from '@/lib/crypto';
 import prisma from '@/lib/prisma';
+import { applyRateLimit, rateLimitConfigs } from '@/lib/rate-limit';
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -10,6 +11,10 @@ const registerSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await applyRateLimit(request, rateLimitConfigs.auth);
+  if (rateLimitResult) return rateLimitResult;
+
   try {
     const body = await request.json();
     const validatedData = registerSchema.parse(body);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { generateClientId, generateClientSecret, hashPassword } from '@/lib/crypto';
+import { applyRateLimit, rateLimitConfigs } from '@/lib/rate-limit';
 import { z } from 'zod';
 
 const createAppSchema = z.object({
@@ -18,6 +19,10 @@ const createAppSchema = z.object({
 
 // GET /api/oauth/apps - List all OAuth apps for the authenticated user
 export async function GET(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await applyRateLimit(request, rateLimitConfigs.api);
+  if (rateLimitResult) return rateLimitResult;
+
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -51,6 +56,10 @@ export async function GET(request: NextRequest) {
 
 // POST /api/oauth/apps - Create a new OAuth app
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const rateLimitResult = await applyRateLimit(request, rateLimitConfigs.api);
+  if (rateLimitResult) return rateLimitResult;
+
   try {
     const session = await auth();
     if (!session?.user?.id) {
