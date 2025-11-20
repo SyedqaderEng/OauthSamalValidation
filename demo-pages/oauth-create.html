@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create OAuth App - MockAuth</title>
+    <link rel="stylesheet" href="../mockauth-app/app/dashboard/dashboard.css">
+    <style>
+        body { background: #0a0a0f !important; color: #fff; font-family: 'Inter', sans-serif; }
+        
+        .page-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        .page-back { color: #8338ec; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        .page-back:hover { color: #ff006e; }
+        
+        .page-header { margin-bottom: 40px; }
+        .page-title { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
+        .page-subtitle { color: #b8c1ec; font-size: 16px; }
+        
+        .form-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 40px; }
+        
+        .form-section { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .form-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .section-desc { color: #b8c1ec; font-size: 14px; margin-bottom: 25px; }
+        
+        .form-group { margin-bottom: 25px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #b8c1ec; display: flex; align-items: center; gap: 8px; }
+        .label-badge { background: rgba(255, 0, 110, 0.2); color: #ff006e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 14px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 15px; font-family: inherit; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #8338ec; background: rgba(255, 255, 255, 0.08); }
+        .form-textarea { min-height: 100px; resize: vertical; }
+        
+        .form-help { color: #666; font-size: 13px; margin-top: 6px; line-height: 1.5; }
+        .form-help code { background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px; color: #3a86ff; font-family: 'Monaco', monospace; font-size: 12px; }
+        
+        .info-box { background: rgba(58, 134, 255, 0.1); border: 1px solid rgba(58, 134, 255, 0.3); border-radius: 10px; padding: 16px; margin-bottom: 25px; }
+        .info-box-title { color: #3a86ff; font-weight: 700; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .info-box-content { color: #b8c1ec; font-size: 13px; line-height: 1.6; }
+        .info-box-content ul { margin: 8px 0 0 20px; }
+        .info-box-content li { margin: 4px 0; }
+        
+        .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+        .checkbox-item { display: flex; align-items: flex-start; gap: 10px; }
+        .checkbox-item input { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; }
+        .checkbox-label { cursor: pointer; flex: 1; }
+        .checkbox-label strong { display: block; margin-bottom: 4px; }
+        .checkbox-label span { color: #666; font-size: 13px; }
+        
+        .form-actions { display: flex; gap: 15px; margin-top: 40px; }
+        .btn { padding: 14px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255, 0, 110, 0.4); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #b8c1ec; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+        .bg-gradient { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: float 25s infinite; }
+        .gradient-1 { background: radial-gradient(circle, #ff006e 0%, transparent 70%); top: -200px; right: -200px; }
+        .gradient-2 { background: radial-gradient(circle, #8338ec 0%, transparent 70%); bottom: -200px; left: -200px; animation-delay: 12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(80px, -80px) scale(1.1); } 66% { transform: translate(-80px, 80px) scale(0.9); } }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="bg-gradient gradient-1"></div>
+        <div class="bg-gradient gradient-2"></div>
+    </div>
+
+    <div class="page-container">
+        <a href="dashboard.html" class="page-back">← Back to Dashboard</a>
+        
+        <div class="page-header">
+            <h1 class="page-title">Create OAuth 2.0 Application</h1>
+            <p class="page-subtitle">Configure your mock OAuth provider for testing authentication flows</p>
+        </div>
+
+        <form action="oauth-detail.html">
+            <div class="form-card">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Basic Information</h2>
+                    <p class="section-desc">Provide basic details about your OAuth application</p>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Application Name 
+                            <span class="label-badge">Required</span>
+                        </label>
+                        <input type="text" class="form-input" value="My Production API" placeholder="e.g., Production API, Mobile App, Partner Integration">
+                        <p class="form-help">A friendly name to identify this OAuth application in your dashboard</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" placeholder="Brief description of what this app is used for...">OAuth provider for testing our production API authentication flow. Used by backend services and third-party integrations.</textarea>
+                        <p class="form-help">Optional description to help you remember the purpose of this application</p>
+                    </div>
+                </div>
+
+                <!-- OAuth Configuration -->
+                <div class="form-section">
+                    <h2 class="section-title">OAuth Configuration</h2>
+                    <p class="section-desc">Configure OAuth 2.0 flow settings and grant types</p>
+
+                    <div class="info-box">
+                        <div class="info-box-title">💡 Grant Types Explained</div>
+                        <div class="info-box-content">
+                            <ul>
+                                <li><strong>Authorization Code:</strong> Most secure, best for web apps with backend</li>
+                                <li><strong>PKCE:</strong> Enhanced security for mobile and single-page apps</li>
+                                <li><strong>Client Credentials:</strong> Machine-to-machine authentication</li>
+                                <li><strong>Refresh Token:</strong> Get new access tokens without re-authentication</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Grant Types</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" checked>
+                                <div class="checkbox-label">
+                                    <strong>Authorization Code</strong>
+                                    <span>Standard flow for web applications with server-side component</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" checked>
+                                <div class="checkbox-label">
+                                    <strong>PKCE (Proof Key for Code Exchange)</strong>
+                                    <span>Enhanced security for mobile apps and SPAs</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" checked>
+                                <div class="checkbox-label">
+                                    <strong>Client Credentials</strong>
+                                    <span>For machine-to-machine authentication (no user involved)</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" checked>
+                                <div class="checkbox-label">
+                                    <strong>Refresh Token</strong>
+                                    <span>Allow apps to obtain new access tokens automatically</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Redirect URIs</label>
+                        <textarea class="form-textarea" placeholder="https://yourapp.com/callback&#10;http://localhost:3000/auth/callback&#10;https://yourapp.com/oauth/redirect">https://myapp.com/auth/callback
+http://localhost:3000/callback
+https://dev.myapp.com/oauth/redirect</textarea>
+                        <p class="form-help">Add one URI per line. These are the allowed callback URLs after authentication. <code>http://localhost</code> URLs are allowed for development.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Allowed Scopes</label>
+                        <input type="text" class="form-input" value="read:profile, write:data, admin:settings" placeholder="e.g., read:user, write:data, admin:*">
+                        <p class="form-help">Comma-separated list of scopes. Leave empty to allow all scopes. Example: <code>read:user</code>, <code>write:posts</code>, <code>admin:settings</code></p>
+                    </div>
+                </div>
+
+                <!-- Token Settings -->
+                <div class="form-section">
+                    <h2 class="section-title">Token Settings</h2>
+                    <p class="section-desc">Configure access token and refresh token lifetimes</p>
+
+                    <div class="form-group">
+                        <label class="form-label">Access Token Lifetime</label>
+                        <select class="form-select">
+                            <option>15 minutes</option>
+                            <option>30 minutes</option>
+                            <option selected>1 hour</option>
+                            <option>2 hours</option>
+                            <option>4 hours</option>
+                            <option>8 hours</option>
+                            <option>1 day</option>
+                        </select>
+                        <p class="form-help">How long access tokens remain valid. Shorter is more secure.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Refresh Token Lifetime</label>
+                        <select class="form-select">
+                            <option>1 day</option>
+                            <option>7 days</option>
+                            <option>14 days</option>
+                            <option selected>30 days</option>
+                            <option>60 days</option>
+                            <option>90 days</option>
+                            <option>Never expires</option>
+                        </select>
+                        <p class="form-help">How long refresh tokens remain valid before requiring re-authentication</p>
+                    </div>
+                </div>
+
+                <!-- Advanced Settings -->
+                <div class="form-section">
+                    <h2 class="section-title">Advanced Settings</h2>
+                    <p class="section-desc">Additional configuration options</p>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked>
+                            <div class="checkbox-label">
+                                <strong>Auto-approve authorization requests</strong>
+                                <span>Skip the consent screen for testing (not recommended for production)</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox">
+                            <div class="checkbox-label">
+                                <strong>Allow public clients</strong>
+                                <span>Enable authentication without client secret (for mobile/SPA apps)</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" checked>
+                            <div class="checkbox-label">
+                                <strong>Enable email notifications</strong>
+                                <span>Get notified before this app expires (30 days from creation)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create OAuth App →</button>
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

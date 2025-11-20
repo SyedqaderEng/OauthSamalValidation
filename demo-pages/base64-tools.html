@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder/Decoder - MockAuth</title>
+    <style>
+        body { margin: 0; padding: 0; background: #0a0a0f; color: #fff; font-family: 'Inter', sans-serif; }
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .page-back { color: #8338ec; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        .page-back:hover { color: #ff006e; }
+        .page-header { margin-bottom: 40px; }
+        .page-title { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
+        .page-subtitle { color: #b8c1ec; font-size: 16px; }
+        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .tool-section { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; }
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-icon { font-size: 24px; }
+        .info-box { background: rgba(58, 134, 255, 0.1); border: 1px solid rgba(58, 134, 255, 0.3); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+        .info-box-content { color: #b8c1ec; font-size: 13px; line-height: 1.6; }
+        .textarea-input { width: 100%; min-height: 300px; padding: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-family: 'Monaco', monospace; font-size: 14px; resize: vertical; line-height: 1.6; }
+        .textarea-input:focus { outline: none; border-color: #8338ec; background: rgba(255, 255, 255, 0.08); }
+        .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
+        .btn-primary { background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #b8c1ec; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .stat-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 15px; text-align: center; }
+        .stat-label { color: #b8c1ec; font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { color: #fff; font-size: 20px; font-weight: 700; font-family: 'Monaco', monospace; }
+        .divider { text-align: center; color: #666; margin: 40px 0; font-size: 20px; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+        .bg-gradient { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: float 25s infinite; }
+        .gradient-1 { background: radial-gradient(circle, #ff006e 0%, transparent 70%); top: -200px; right: -200px; }
+        .gradient-2 { background: radial-gradient(circle, #8338ec 0%, transparent 70%); bottom: -200px; left: -200px; animation-delay: 12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(80px, -80px); } }
+        @media (max-width: 900px) { .tool-grid { grid-template-columns: 1fr; } .stats { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"><div class="bg-gradient gradient-1"></div><div class="bg-gradient gradient-2"></div></div>
+
+    <div class="page-container">
+        <a href="dashboard.html" class="page-back">← Back to Dashboard</a>
+
+        <div class="page-header">
+            <h1 class="page-title">Base64 Encoder & Decoder</h1>
+            <p class="page-subtitle">Encode and decode Base64 strings for SAML, OAuth, and general use</p>
+        </div>
+
+        <div class="tool-grid">
+            <!-- Encoder -->
+            <div class="tool-section">
+                <h2 class="section-title"><span class="section-icon">🔼</span> Encode to Base64</h2>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                        Paste plain text below to encode it to Base64. Commonly used for encoding SAML assertions, XML metadata, and binary data.
+                    </div>
+                </div>
+
+                <textarea class="textarea-input" placeholder="Enter plain text to encode..."><?xml version="1.0" encoding="UTF-8"?>
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                ID="_example123"
+                Version="2.0"
+                IssueInstant="2024-11-15T10:00:00Z">
+  <saml:Issuer>https://idp.mockauth.dev</saml:Issuer>
+  <samlp:Status>
+    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+  </samlp:Status>
+</samlp:Response></textarea>
+
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary">Encode ↓</button>
+                    <button class="btn btn-secondary">Copy</button>
+                    <button class="btn btn-secondary">Clear</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Characters</div>
+                        <div class="stat-value">342</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Bytes</div>
+                        <div class="stat-value">342</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Lines</div>
+                        <div class="stat-value">10</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decoder -->
+            <div class="tool-section">
+                <h2 class="section-title"><span class="section-icon">🔽</span> Decode from Base64</h2>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                        Paste Base64-encoded text below to decode it. Useful for reading SAML assertions from HTTP requests and responses.
+                    </div>
+                </div>
+
+                <textarea class="textarea-input" placeholder="Enter Base64 encoded text to decode...">PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiCiAgICAgICAgICAgICAgICBJRD0iX2V4YW1wbGUxMjMiCiAgICAgICAgICAgICAgICBWZXJzaW9uPSIyLjAiCiAgICAgICAgICAgICAgICBJc3N1ZUluc3RhbnQ9IjIwMjQtMTEtMTVUMTA6MDA6MDBaIj4KICA8c2FtbDpJc3N1ZXI+aHR0cHM6Ly9pZHAubW9ja2F1dGguZGV2PC9zYW1sOklzc3Vlcj4KICA8c2FtbHA6U3RhdHVzPgogICAgPHNhbWxwOlN0YXR1c0NvZGUgVmFsdWU9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpzdGF0dXM6U3VjY2VzcyIvPgogIDwvc2FtbHA6U3RhdHVzPgo8L3NhbWxwOlJlc3BvbnNlPg==</textarea>
+
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary">Decode ↑</button>
+                    <button class="btn btn-secondary">Copy</button>
+                    <button class="btn btn-secondary">Clear</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Characters</div>
+                        <div class="stat-value">456</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Decoded Size</div>
+                        <div class="stat-value">342</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Efficiency</div>
+                        <div class="stat-value">75%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider">⬍ ⬍ ⬍</div>
+
+        <!-- Quick Actions -->
+        <div class="tool-section" style="margin-top: 40px;">
+            <h2 class="section-title"><span class="section-icon">⚡</span> Quick Actions</h2>
+
+            <div class="info-box">
+                <div class="info-box-content">
+                    <strong>Common Use Cases:</strong><br><br>
+                    • <strong>SAML Assertions:</strong> SAML responses are often Base64-encoded when transmitted via HTTP POST or HTTP Redirect bindings.<br><br>
+                    • <strong>OAuth State Parameters:</strong> Encode state information for OAuth flows to prevent tampering.<br><br>
+                    • <strong>Binary Data:</strong> Encode binary files, images, or certificates for transmission in text-based protocols.<br><br>
+                    • <strong>URL-Safe Encoding:</strong> This tool uses standard Base64 encoding. For URL-safe Base64, replace '+' with '-' and '/' with '_'.
+                </div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px;">
+                <button class="btn btn-secondary">Load Sample SAML Assertion</button>
+                <button class="btn btn-secondary">Load Sample JWT</button>
+                <button class="btn btn-secondary">Load Sample XML Metadata</button>
+                <button class="btn btn-secondary">Load Sample Certificate</button>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="tool-grid" style="margin-top: 40px;">
+            <div class="tool-section">
+                <h2 class="section-title"><span class="section-icon">💡</span> About Base64</h2>
+
+                <div class="info-box-content">
+                    Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used in:
+                    <br><br>
+                    <strong>• Email Attachments:</strong> MIME encoding<br>
+                    <strong>• Data URIs:</strong> Embedding images in HTML/CSS<br>
+                    <strong>• SAML/OAuth:</strong> Encoding XML assertions and tokens<br>
+                    <strong>• API Tokens:</strong> Encoding credentials<br><br>
+                    The encoding uses 64 characters: A-Z, a-z, 0-9, +, and /
+                </div>
+            </div>
+
+            <div class="tool-section">
+                <h2 class="section-title"><span class="section-icon">🔒</span> Security Note</h2>
+
+                <div class="info-box-content" style="color: #ffbd2e;">
+                    <strong>⚠️ Important:</strong><br><br>
+                    Base64 is an encoding method, NOT encryption. It provides no security or confidentiality. Anyone can decode Base64-encoded data.<br><br>
+                    <strong>Never use Base64 alone to protect sensitive information.</strong><br><br>
+                    For secure data transmission, use proper encryption (TLS/SSL) and cryptographic signatures.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

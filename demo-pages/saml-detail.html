@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAML Environment Details - MockAuth</title>
+    <style>
+        body { margin: 0; padding: 0; background: #0a0a0f; color: #fff; font-family: 'Inter', sans-serif; }
+        .page-container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        .page-back { color: #8338ec; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        .page-back:hover { color: #ff006e; }
+        .page-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: start; }
+        .header-left { flex: 1; }
+        .page-title { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
+        .page-subtitle { color: #b8c1ec; font-size: 16px; }
+        .status-badge { display: inline-block; background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid rgba(0, 255, 136, 0.3); }
+        .header-actions { display: flex; gap: 12px; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; }
+        .btn-primary { background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); color: white; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #b8c1ec; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .btn-danger { background: rgba(255, 0, 110, 0.1); color: #ff006e; border: 1px solid rgba(255, 0, 110, 0.3); }
+        .btn-danger:hover { background: rgba(255, 0, 110, 0.2); }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+        .card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; }
+        .card-full { grid-column: 1 / -1; }
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .card-title-icon { font-size: 20px; }
+        .credential-item { margin-bottom: 20px; }
+        .credential-item:last-child { margin-bottom: 0; }
+        .credential-label { font-size: 13px; font-weight: 600; color: #b8c1ec; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .credential-value { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px 16px; font-family: 'Monaco', monospace; font-size: 13px; color: #3a86ff; display: flex; justify-content: space-between; align-items: center; word-break: break-all; }
+        .credential-text { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+        .copy-btn { background: rgba(131, 56, 236, 0.2); color: #8338ec; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; margin-left: 10px; flex-shrink: 0; }
+        .copy-btn:hover { background: rgba(131, 56, 236, 0.3); }
+        .info-box { background: rgba(58, 134, 255, 0.1); border: 1px solid rgba(58, 134, 255, 0.3); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+        .info-box-title { color: #3a86ff; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+        .info-box-content { color: #b8c1ec; font-size: 13px; line-height: 1.6; }
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: #b8c1ec; font-size: 14px; }
+        .detail-value { color: #fff; font-size: 14px; font-weight: 600; }
+        .code-block { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 16px; font-family: 'Monaco', monospace; font-size: 12px; color: #b8c1ec; overflow-x: auto; line-height: 1.6; max-height: 300px; overflow-y: auto; }
+        .expires-warning { color: #ffbd2e; font-size: 13px; margin-top: 15px; }
+        .tag { display: inline-block; background: rgba(131, 56, 236, 0.2); color: #8338ec; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 6px; margin-bottom: 6px; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+        .bg-gradient { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: float 25s infinite; }
+        .gradient-1 { background: radial-gradient(circle, #ff006e 0%, transparent 70%); top: -200px; right: -200px; }
+        .gradient-2 { background: radial-gradient(circle, #8338ec 0%, transparent 70%); bottom: -200px; left: -200px; animation-delay: 12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(80px, -80px); } }
+        @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"><div class="bg-gradient gradient-1"></div><div class="bg-gradient gradient-2"></div></div>
+
+    <div class="page-container">
+        <a href="saml-list.html" class="page-back">← Back to SAML Environments</a>
+
+        <div class="page-header">
+            <div class="header-left">
+                <h1 class="page-title">Enterprise Partner Portal</h1>
+                <p class="page-subtitle">Created on November 15, 2024 • Expires in 27 days</p>
+            </div>
+            <div class="header-actions">
+                <span class="status-badge">● Active</span>
+                <button class="btn btn-secondary">Edit</button>
+                <button class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- Quick Actions -->
+            <div class="card card-full">
+                <h2 class="card-title"><span class="card-title-icon">📥</span> Download Metadata & Certificates</h2>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-primary">Download IdP Metadata XML</button>
+                    <button class="btn btn-secondary">Download SP Metadata XML</button>
+                    <button class="btn btn-secondary">Download Certificate (.pem)</button>
+                    <button class="btn btn-secondary">Download Private Key</button>
+                </div>
+                <p class="expires-warning">⚠️ This environment and all metadata will be deleted on December 15, 2024. You'll receive an email with XML backup 3 days before expiration.</p>
+            </div>
+
+            <!-- SP Configuration -->
+            <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">🔧</span> Service Provider Config</h2>
+
+                <div class="detail-row">
+                    <span class="detail-label">Entity ID</span>
+                    <span class="detail-value" style="font-size: 12px; word-break: break-all;">https://partner-portal.mycompany.com/saml/sp</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">ACS URL</span>
+                    <span class="detail-value" style="font-size: 12px; word-break: break-all;">https://partner-portal.mycompany.com/saml/acs</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">SLO URL</span>
+                    <span class="detail-value" style="font-size: 12px; word-break: break-all;">https://partner-portal.mycompany.com/saml/slo</span>
+                </div>
+            </div>
+
+            <!-- IdP Configuration -->
+            <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">🏢</span> Identity Provider Config</h2>
+
+                <div class="detail-row">
+                    <span class="detail-label">Entity ID</span>
+                    <span class="detail-value" style="font-size: 12px; word-break: break-all;">https://idp.mockauth.dev/saml/corp</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">SSO URL</span>
+                    <span class="detail-value" style="font-size: 12px; word-break: break-all;">https://idp.mockauth.dev/saml/corp/sso</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">SLO URL</span>
+                    <span class="detail-value" style="font-size: 12px; word-break: break-all;">https://idp.mockauth.dev/saml/corp/slo</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Binding</span>
+                    <span class="detail-value">HTTP-POST</span>
+                </div>
+            </div>
+
+            <!-- Attribute Mapping -->
+            <div class="card card-full">
+                <h2 class="card-title"><span class="card-title-icon">🏷️</span> Attribute Mapping</h2>
+
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value" style="font-size: 12px;">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">First Name</span>
+                    <span class="detail-value" style="font-size: 12px;">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Last Name</span>
+                    <span class="detail-value" style="font-size: 12px;">http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname</span>
+                </div>
+            </div>
+
+            <!-- Test This Environment -->
+            <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">🧪</span> Test SSO Flow</h2>
+
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 12px;">Launch SP-Initiated SSO</button>
+                <button class="btn btn-secondary" style="width: 100%; margin-bottom: 12px;">Launch IdP-Initiated SSO</button>
+                <button class="btn btn-secondary" style="width: 100%;">Test Logout Flow</button>
+            </div>
+
+            <!-- Settings -->
+            <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">⚙️</span> Settings</h2>
+
+                <div class="detail-row">
+                    <span class="detail-label">Assertion Lifetime</span>
+                    <span class="detail-value">10 minutes</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">NameID Format</span>
+                    <span class="detail-value">Email Address</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Sign Assertions</span>
+                    <span class="detail-value">✓ Yes</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Sign Response</span>
+                    <span class="detail-value">✓ Yes</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Encrypt Assertions</span>
+                    <span class="detail-value">✗ No</span>
+                </div>
+            </div>
+
+            <!-- X.509 Certificate -->
+            <div class="card card-full">
+                <h2 class="card-title"><span class="card-title-icon">🔐</span> X.509 Certificate</h2>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                        Use this certificate to verify SAML assertions signed by this IdP. You can also download it in .pem format above.
+                    </div>
+                </div>
+
+                <div class="code-block">-----BEGIN CERTIFICATE-----
+MIIDXTCCAkWgAwIBAgIJAKxpVRjJhkQ4MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
+aWRnaXRzIFB0eSBMdGQwHhcNMjQxMTE1MTAwMDAwWhcNMjQxMjE1MTAwMDAwWjBF
+MQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50
+ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
+CgKCAQEAr5c8VpYQlJzQvPFxTjVJQ8PCxvLCmcJFNnKC1QiJQqpLT3WN5vLM0wRT
+K4h0jXqVzDJ5DlMNqRRcCPh0xVz4wQ0MQzQrJ8Yk8kGLHvNy8gLM6wFQmWt0QnJp
+3qXp9kLxBh1bT0c8xDGQvJYmhP7lVLJhKpQkQcPxHzNz7G5wQhLKpBqPvRVnJwLQ
+-----END CERTIFICATE-----</div>
+            </div>
+
+            <!-- IdP Metadata XML -->
+            <div class="card card-full">
+                <h2 class="card-title"><span class="card-title-icon">📄</span> IdP Metadata XML</h2>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                        Copy this metadata and import it into your Service Provider configuration, or download it using the button above.
+                    </div>
+                </div>
+
+                <div class="code-block">&lt;?xml version="1.0"?&gt;
+&lt;md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     entityID="https://idp.mockauth.dev/saml/corp"&gt;
+  &lt;md:IDPSSODescriptor WantAuthnRequestsSigned="false"
+                       protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol"&gt;
+    &lt;md:KeyDescriptor use="signing"&gt;
+      &lt;ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#"&gt;
+        &lt;ds:X509Data&gt;
+          &lt;ds:X509Certificate&gt;
+MIIDXTCCAkWgAwIBAgIJAKxpVRjJhkQ4MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV...
+          &lt;/ds:X509Certificate&gt;
+        &lt;/ds:X509Data&gt;
+      &lt;/ds:KeyInfo&gt;
+    &lt;/md:KeyDescriptor&gt;
+    &lt;md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                            Location="https://idp.mockauth.dev/saml/corp/slo"/&gt;
+    &lt;md:NameIDFormat&gt;urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress&lt;/md:NameIDFormat&gt;
+    &lt;md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                            Location="https://idp.mockauth.dev/saml/corp/sso"/&gt;
+    &lt;md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                            Location="https://idp.mockauth.dev/saml/corp/sso"/&gt;
+  &lt;/md:IDPSSODescriptor&gt;
+&lt;/md:EntityDescriptor&gt;</div>
+            </div>
+
+            <!-- Test Users -->
+            <div class="card card-full">
+                <h2 class="card-title"><span class="card-title-icon">👤</span> Test Users</h2>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                        These test users can authenticate via this SAML environment. Use them to test your SSO integration.
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">john.doe@company.com</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">First Name</span>
+                    <span class="detail-value">John</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Last Name</span>
+                    <span class="detail-value">Doe</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Additional Attributes</span>
+                    <span class="detail-value">
+                        <div class="tag">department: Engineering</div>
+                        <div class="tag">employeeId: EMP-12345</div>
+                        <div class="tag">role: Senior Developer</div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
