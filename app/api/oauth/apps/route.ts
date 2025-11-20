@@ -47,7 +47,14 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ apps });
+    // Parse JSON strings for arrays
+    const parsedApps = apps.map(app => ({
+      ...app,
+      grantTypes: JSON.parse(app.grantTypes),
+      scopes: JSON.parse(app.scopes),
+    }));
+
+    return NextResponse.json({ apps: parsedApps });
   } catch (error) {
     console.error('Error fetching OAuth apps:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -78,7 +85,7 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + parseInt(process.env.RESOURCE_EXPIRY_DAYS || '30'));
 
-    // Create OAuth app
+    // Create OAuth app (stringify arrays for SQLite)
     const app = await prisma.oAuthApp.create({
       data: {
         userId: session.user.id,
@@ -86,9 +93,9 @@ export async function POST(request: NextRequest) {
         description: validatedData.description,
         clientId,
         clientSecret: hashedSecret,
-        grantTypes: validatedData.grantTypes,
-        redirectUris: validatedData.redirectUris,
-        scopes: validatedData.scopes,
+        grantTypes: JSON.stringify(validatedData.grantTypes),
+        redirectUris: JSON.stringify(validatedData.redirectUris),
+        scopes: JSON.stringify(validatedData.scopes),
         accessTokenLifetime: validatedData.accessTokenLifetime,
         refreshTokenLifetime: validatedData.refreshTokenLifetime,
         autoApprove: validatedData.autoApprove,
@@ -109,10 +116,14 @@ export async function POST(request: NextRequest) {
     });
 
     // Return the app with the plain-text client secret (only shown once)
+    // Parse JSON strings for arrays
     return NextResponse.json(
       {
         app: {
           ...app,
+          grantTypes: JSON.parse(app.grantTypes),
+          redirectUris: JSON.parse(app.redirectUris),
+          scopes: JSON.parse(app.scopes),
           clientSecret, // Plain text, only returned on creation
         },
       },

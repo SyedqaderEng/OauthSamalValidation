@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
 async function getOAuthApps(userId: string) {
-  return await prisma.oAuthApp.findMany({
+  const apps = await prisma.oAuthApp.findMany({
     where: {
       userId,
       deletedAt: null,
@@ -13,6 +13,14 @@ async function getOAuthApps(userId: string) {
       createdAt: 'desc',
     },
   });
+
+  // Parse JSON strings for SQLite compatibility
+  return apps.map(app => ({
+    ...app,
+    grantTypes: JSON.parse(app.grantTypes),
+    redirectUris: JSON.parse(app.redirectUris),
+    scopes: JSON.parse(app.scopes),
+  }));
 }
 
 export default async function OAuthAppsPage() {
