@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -36,12 +35,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -76,9 +75,9 @@ model OAuthApp {
   description            String?
   clientId               String   @unique @default(cuid())
   clientSecret           String   // Hashed
-  grantTypes             String[] // ['authorization_code', 'client_credentials', 'refresh_token', 'pkce']
-  redirectUris           String[] @db.Text
-  scopes                 String[] @default(["read:profile"])
+  grantTypes             String   // JSON array: ['authorization_code', 'client_credentials', 'refresh_token', 'pkce']
+  redirectUris           String   // JSON array
+  scopes                 String   @default("[\"read:profile\"]") // JSON array
   accessTokenLifetime    Int      @default(3600) // seconds
   refreshTokenLifetime   Int      @default(2592000) // 30 days
   autoApprove            Boolean  @default(false)
@@ -103,14 +102,14 @@ model OAuthToken {
   accessToken        String   @unique
   refreshToken       String?  @unique
   tokenType          String   @default("Bearer")
-  scope              String[]
-  expiresAt          DateTime
+  scope              String   // JSON array
 
   userId             String?
   userEmail          String?
   userName           String?
 
   createdAt          DateTime @default(now())
+  expiresAt          DateTime
 
   app                OAuthApp @relation(fields: [appId], references: [id], onDelete: Cascade)
 
@@ -133,14 +132,14 @@ model SamlEnvironment {
   acsUrl               String?  // For SP
 
   // Certificate & Keys (encrypted)
-  certificate          String?  @db.Text
-  privateKey           String?  @db.Text
+  certificate          String?
+  privateKey           String?
 
   // IdP Metadata (from uploaded XML)
-  idpMetadata          Json?
+  idpMetadata          String?  // JSON string
 
   // Attribute Mappings
-  attributeMappings    Json?    // { "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", ... }
+  attributeMappings    String?  // JSON string: { "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", ... }
 
   // SAML Settings
   nameIdFormat         String   @default("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress")
@@ -150,7 +149,7 @@ model SamlEnvironment {
   encryptAssertions    Boolean  @default(false)
 
   // Test Users
-  testUsers            Json?    // [{ email, firstName, lastName, customAttributes }]
+  testUsers            String?  // JSON string: [{ email, firstName, lastName, customAttributes }]
 
   createdAt            DateTime @default(now())
   expiresAt            DateTime // 30 days from creation
@@ -170,7 +169,7 @@ model SamlSession {
   environmentId     String
   sessionId         String          @unique
   nameId            String
-  sessionData       Json
+  sessionData       String          // JSON string
 
   createdAt         DateTime        @default(now())
   expiresAt         DateTime
@@ -188,9 +187,9 @@ model ApiKey {
   name        String
   keyHash     String    @unique // Hashed API key
   keyPrefix   String    // First 8 chars for identification
-  permissions String[]  @default(["read", "write"])
-  lastUsedAt  DateTime?
+  permissions String    @default("[\"read\",\"write\"]") // JSON array
 
+  lastUsedAt  DateTime?
   createdAt   DateTime  @default(now())
   expiresAt   DateTime?
   revokedAt   DateTime?
@@ -207,7 +206,7 @@ model AuditLog {
   action          String    // 'create', 'update', 'delete', 'login', etc.
   resourceType    String    // 'oauth_app', 'saml_environment', 'api_key'
   resourceId      String?
-  metadata        Json?
+  metadata        String?   // JSON string
   ipAddress       String?
   userAgent       String?
 
