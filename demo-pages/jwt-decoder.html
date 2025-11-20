@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Decoder - MockAuth</title>
+    <style>
+        body { margin: 0; padding: 0; background: #0a0a0f; color: #fff; font-family: 'Inter', sans-serif; }
+        .page-container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        .page-back { color: #8338ec; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; }
+        .page-back:hover { color: #ff006e; }
+        .page-header { margin-bottom: 40px; }
+        .page-title { font-size: 36px; font-weight: 900; margin-bottom: 12px; }
+        .page-subtitle { color: #b8c1ec; font-size: 16px; }
+        .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .tool-section { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; }
+        .tool-section-full { grid-column: 1 / -1; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-icon { font-size: 20px; }
+        .info-box { background: rgba(58, 134, 255, 0.1); border: 1px solid rgba(58, 134, 255, 0.3); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+        .info-box-title { color: #3a86ff; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+        .info-box-content { color: #b8c1ec; font-size: 13px; line-height: 1.6; }
+        .textarea-input { width: 100%; min-height: 250px; padding: 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #3a86ff; font-family: 'Monaco', monospace; font-size: 13px; resize: vertical; line-height: 1.6; }
+        .textarea-input:focus { outline: none; border-color: #8338ec; background: rgba(255, 255, 255, 0.08); }
+        .code-display { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 20px; font-family: 'Monaco', monospace; font-size: 13px; line-height: 1.8; min-height: 250px; }
+        .json-key { color: #ff006e; }
+        .json-string { color: #00ff88; }
+        .json-number { color: #3a86ff; }
+        .json-boolean { color: #ffbd2e; }
+        .property-grid { display: grid; gap: 15px; }
+        .property-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .property-row:last-child { border-bottom: none; }
+        .property-label { color: #b8c1ec; font-size: 14px; font-weight: 600; }
+        .property-value { color: #fff; font-size: 14px; font-family: 'Monaco', monospace; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
+        .btn-primary { background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #b8c1ec; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .warning-box { background: rgba(255, 189, 46, 0.1); border: 1px solid rgba(255, 189, 46, 0.3); border-radius: 10px; padding: 16px; margin-top: 20px; }
+        .warning-box-title { color: #ffbd2e; font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+        .warning-box-content { color: #b8c1ec; font-size: 13px; line-height: 1.6; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.2; }
+        .bg-gradient { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: float 25s infinite; }
+        .gradient-1 { background: radial-gradient(circle, #ff006e 0%, transparent 70%); top: -200px; right: -200px; }
+        .gradient-2 { background: radial-gradient(circle, #8338ec 0%, transparent 70%); bottom: -200px; left: -200px; animation-delay: 12s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(80px, -80px); } }
+        @media (max-width: 1000px) { .tool-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"><div class="bg-gradient gradient-1"></div><div class="bg-gradient gradient-2"></div></div>
+
+    <div class="page-container">
+        <a href="dashboard.html" class="page-back">← Back to Dashboard</a>
+
+        <div class="page-header">
+            <h1 class="page-title">JWT Decoder & Encoder</h1>
+            <p class="page-subtitle">Decode, verify, and generate JSON Web Tokens</p>
+        </div>
+
+        <div class="tool-grid">
+            <!-- JWT Input -->
+            <div class="tool-section">
+                <h2 class="section-title"><span class="section-icon">📥</span> JWT Token</h2>
+
+                <div class="info-box">
+                    <div class="info-box-content">
+                        Paste your JWT token below to decode it, or use the "Generate Sample" button to create a test token.
+                    </div>
+                </div>
+
+                <textarea class="textarea-input" placeholder="Paste JWT token here...
+Example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvYXV0aDJfY2xpZW50XzN4NG1wbDNjbDEzbnQxZDU2Nzg5MGFiYyIsIm5hbWUiOiJKb2huIERvZSIsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJzY29wZSI6InJlYWQ6cHJvZmlsZSB3cml0ZTpkYXRhIiwiaWF0IjoxNzAwMDAwMDAwLCJleHAiOjE3MDAwMDM2MDAsImlzcyI6Imh0dHBzOi8vbW9ja2F1dGguZGV2IiwiYXVkIjoiaHR0cHM6Ly9teWFwcC5jb20ifQ.mF3VzN2Y5K8pQxW7J9L4nR6tE2sO1vH8cU0iA3bD4fG</textarea>
+
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary">Decode JWT</button>
+                    <button class="btn btn-secondary">Generate Sample</button>
+                    <button class="btn btn-secondary">Copy</button>
+                    <button class="btn btn-secondary">Clear</button>
+                </div>
+            </div>
+
+            <!-- Decoded Header -->
+            <div class="tool-section">
+                <h2 class="section-title"><span class="section-icon">📋</span> Header</h2>
+
+                <div class="code-display">{
+  <span class="json-key">"alg"</span>: <span class="json-string">"HS256"</span>,
+  <span class="json-key">"typ"</span>: <span class="json-string">"JWT"</span>
+}</div>
+
+                <div class="property-grid" style="margin-top: 20px;">
+                    <div class="property-row">
+                        <span class="property-label">Algorithm</span>
+                        <span class="property-value">HS256 (HMAC SHA-256)</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Type</span>
+                        <span class="property-value">JWT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decoded Payload -->
+            <div class="tool-section tool-section-full">
+                <h2 class="section-title"><span class="section-icon">📦</span> Payload (Claims)</h2>
+
+                <div class="code-display">{
+  <span class="json-key">"sub"</span>: <span class="json-string">"oauth2_client_3x4mpl3cl13nt1d567890abc"</span>,
+  <span class="json-key">"name"</span>: <span class="json-string">"John Doe"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"john.doe@example.com"</span>,
+  <span class="json-key">"scope"</span>: <span class="json-string">"read:profile write:data"</span>,
+  <span class="json-key">"iat"</span>: <span class="json-number">1700000000</span>,
+  <span class="json-key">"exp"</span>: <span class="json-number">1700003600</span>,
+  <span class="json-key">"iss"</span>: <span class="json-string">"https://mockauth.dev"</span>,
+  <span class="json-key">"aud"</span>: <span class="json-string">"https://myapp.com"</span>
+}</div>
+
+                <div class="property-grid" style="margin-top: 20px;">
+                    <div class="property-row">
+                        <span class="property-label">Subject (sub)</span>
+                        <span class="property-value">oauth2_client_3x4mpl3cl13nt1d567890abc</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Name</span>
+                        <span class="property-value">John Doe</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Email</span>
+                        <span class="property-value">john.doe@example.com</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Scope</span>
+                        <span class="property-value">read:profile write:data</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Issued At (iat)</span>
+                        <span class="property-value">Nov 15, 2024 00:00:00 UTC</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Expires (exp)</span>
+                        <span class="property-value">Nov 15, 2024 01:00:00 UTC (in 1 hour)</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Issuer (iss)</span>
+                        <span class="property-value">https://mockauth.dev</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Audience (aud)</span>
+                        <span class="property-value">https://myapp.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signature Verification -->
+            <div class="tool-section tool-section-full">
+                <h2 class="section-title"><span class="section-icon">🔐</span> Signature Verification</h2>
+
+                <div class="info-box">
+                    <div class="info-box-title">✓ Signature Valid</div>
+                    <div class="info-box-content">
+                        The signature is valid and the token has not been tampered with. The token was signed using HMAC SHA-256 algorithm.
+                    </div>
+                </div>
+
+                <div class="property-grid">
+                    <div class="property-row">
+                        <span class="property-label">Algorithm</span>
+                        <span class="property-value">HS256 (HMAC SHA-256)</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Signature</span>
+                        <span class="property-value">mF3VzN2Y5K8pQxW7J9L4nR6tE2sO1vH8cU0iA3bD4fG</span>
+                    </div>
+                    <div class="property-row">
+                        <span class="property-label">Status</span>
+                        <span class="property-value" style="color: #00ff88;">✓ Verified</span>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-title">⚠️ Important Security Note</div>
+                    <div class="warning-box-content">
+                        This tool is for development and testing only. Never paste production secrets or private keys into online tools. Always verify tokens server-side in production environments.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
