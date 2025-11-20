@@ -64,7 +64,7 @@ A production-grade SaaS platform for testing OAuth 2.0 and SAML 2.0 authenticati
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd mockauth
+cd OauthSamalValidation
 ```
 
 2. **Install dependencies**
@@ -73,20 +73,26 @@ npm install
 ```
 
 3. **Set up environment variables**
+
+For **local development**:
 ```bash
-cp .env.example .env
+cp local.env .env
 ```
 
-Edit `.env` with your configuration:
-```env
-DATABASE_URL="file:./dev.db"
-NEXTAUTH_SECRET="your-secret-key-min-32-chars"
-JWT_SECRET="your-jwt-secret-min-32-chars"
-ENCRYPTION_KEY="generate-with-crypto-randomBytes"
+For **production**:
+```bash
+cp prod.env .env
+# Edit .env with your production values
 ```
 
-Generate encryption key:
+The `local.env` file is pre-configured with working defaults for local development. For production, update all values in `.env` after copying from `prod.env`.
+
+Generate secure secrets for production:
 ```bash
+# For NEXTAUTH_SECRET and JWT_SECRET
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+
+# For ENCRYPTION_KEY
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
@@ -109,8 +115,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 1. **Create `.env` file with production values**
 ```bash
-cp .env.example .env
-# Edit .env with production values
+cp prod.env .env
+# Edit .env with your production values
 ```
 
 2. **Start all services**
@@ -157,7 +163,7 @@ The application uses the following main models:
 - **ApiKey** - API key management
 - **AuditLog** - Audit trail for all actions
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed schema documentation.
+All schema details can be found in `prisma/schema.prisma`.
 
 ## API Endpoints
 
@@ -290,7 +296,7 @@ EMAIL_FROM="noreply@mockauth.dev"
 ### Project Structure
 
 ```
-mockauth/
+OauthSamalValidation/
 ├── app/                    # Next.js App Router pages
 │   ├── api/               # API routes
 │   ├── dashboard/         # Dashboard pages
@@ -309,7 +315,11 @@ mockauth/
 ├── public/                # Static assets
 ├── auth.ts                # NextAuth configuration
 ├── middleware.ts          # Route protection
-└── next.config.ts         # Next.js config
+├── next.config.ts         # Next.js config
+├── local.env              # Local development config template
+├── prod.env               # Production config template
+├── Dockerfile             # Docker build configuration
+└── docker-compose.yml     # Docker Compose setup
 ```
 
 ### Available Scripts
