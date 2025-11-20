@@ -226,82 +226,79 @@
             border-color: #8338ec;
         }
 
-        /* Animated Card Display */
+        /* Terminal Window */
         .hero-visual {
             perspective: 1000px;
         }
 
-        .card-stack {
-            position: relative;
-            height: 500px;
-        }
-
-        .floating-card {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.05);
+        .terminal-window {
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff006e; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #00ff9f; }
+
+        .terminal-body {
             padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-        }
-
-        .floating-card:hover {
-            transform: translateY(-10px) !important;
-            border-color: rgba(255, 0, 110, 0.5);
-        }
-
-        .card-1 {
-            width: 380px;
-            top: 0;
-            left: 0;
-            transform: rotate(-5deg);
-            z-index: 3;
-        }
-
-        .card-2 {
-            width: 380px;
-            top: 100px;
-            right: 0;
-            transform: rotate(5deg);
-            z-index: 2;
-        }
-
-        .card-3 {
-            width: 380px;
-            top: 200px;
-            left: 50px;
-            transform: rotate(-3deg);
-            z-index: 1;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .card-content {
-            color: #b8c1ec;
+            font-family: 'Monaco', 'Courier New', monospace;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.8;
+            min-height: 400px;
         }
 
-        .card-badge {
-            background: rgba(255, 0, 110, 0.2);
-            border: 1px solid rgba(255, 0, 110, 0.3);
+        .terminal-line {
+            margin-bottom: 8px;
+        }
+
+        .prompt {
             color: #ff006e;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
             font-weight: 700;
-            display: inline-block;
-            margin-top: 15px;
+        }
+
+        .command {
+            color: #00ff9f;
+        }
+
+        .output {
+            color: #b8c1ec;
+        }
+
+        .output-success {
+            color: #00ff9f;
+        }
+
+        .output-highlight {
+            color: #3a86ff;
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         /* Features Section */
@@ -675,7 +672,7 @@
                 display: none;
             }
 
-            .card-stack {
+            .terminal-window {
                 display: none;
             }
 
@@ -723,33 +720,54 @@
             </div>
 
             <div class="hero-visual">
-                <div class="card-stack">
-                    <div class="floating-card card-1">
-                        <div class="card-title">OAuth 2.0 App Created!</div>
-                        <div class="card-content">
-                            client_id: demo_abc123<br>
-                            client_secret: sk_xyz789<br>
-                            Ready to authenticate!
-                        </div>
-                        <span class="card-badge">Active</span>
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <span class="terminal-dot dot-red"></span>
+                        <span class="terminal-dot dot-yellow"></span>
+                        <span class="terminal-dot dot-green"></span>
                     </div>
-                    <div class="floating-card card-2">
-                        <div class="card-title">SAML IdP Configured</div>
-                        <div class="card-content">
-                            Entity ID: https://mockauth.dev/saml<br>
-                            SSO URL: Ready<br>
-                            Metadata: Available
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="prompt">$</span> <span class="command">mockauth create oauth-app --name "My Test App"</span>
                         </div>
-                        <span class="card-badge">Live</span>
-                    </div>
-                    <div class="floating-card card-3">
-                        <div class="card-title">30-Day Lifecycle</div>
-                        <div class="card-content">
-                            Auto-expiry in 29 days<br>
-                            XML backup via email<br>
-                            One-click restore
+                        <div class="terminal-line">
+                            <span class="output-success">✓ OAuth 2.0 App created successfully!</span>
                         </div>
-                        <span class="card-badge">Automated</span>
+                        <div class="terminal-line">
+                            <span class="output">  App ID: <span class="output-highlight">app_abc123xyz</span></span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  Client ID: <span class="output-highlight">client_demo_xyz789</span></span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  Client Secret: <span class="output-highlight">sk_live_xyz123abc456</span></span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  Token Endpoint: <span class="output-highlight">https://mockauth.dev/oauth/token</span></span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        <div class="terminal-line">
+                            <span class="prompt">$</span> <span class="command">mockauth create saml-idp --entity-id "myapp"</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output-success">✓ SAML IdP created successfully!</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  Entity ID: <span class="output-highlight">https://mockauth.dev/saml/myapp</span></span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  SSO URL: <span class="output-highlight">https://mockauth.dev/saml/myapp/sso</span></span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  Metadata: <span class="output-highlight">https://mockauth.dev/saml/myapp/metadata.xml</span></span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">  Auto-expires in: <span class="output-highlight">30 days</span></span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        <div class="terminal-line">
+                            <span class="prompt">$</span> <span class="cursor">█</span>
+                        </div>
                     </div>
                 </div>
             </div>
