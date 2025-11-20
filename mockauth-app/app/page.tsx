@@ -38,56 +38,59 @@ export default function Home() {
               <a href="#" className="btn-hero-secondary">See How It Works</a>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="hero-visual">
-            <div className="terminal-window">
-              <div className="terminal-header">
-                <span className="terminal-dot dot-red"></span>
-                <span className="terminal-dot dot-yellow"></span>
-                <span className="terminal-dot dot-green"></span>
+      {/* Terminal Demo Section */}
+      <section className="terminal-section">
+        <div className="container">
+          <div className="terminal-window">
+            <div className="terminal-header">
+              <span className="terminal-dot dot-red"></span>
+              <span className="terminal-dot dot-yellow"></span>
+              <span className="terminal-dot dot-green"></span>
+            </div>
+            <div className="terminal-body">
+              <div className="terminal-line">
+                <span className="prompt">$</span> <span className="command">mockauth create oauth-app --name &quot;My Test App&quot;</span>
               </div>
-              <div className="terminal-body">
-                <div className="terminal-line">
-                  <span className="prompt">$</span> <span className="command">mockauth create oauth-app --name &quot;My Test App&quot;</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output-success">✓ OAuth 2.0 App created successfully!</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  App ID: <span className="output-highlight">app_abc123xyz</span></span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  Client ID: <span className="output-highlight">client_demo_xyz789</span></span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  Client Secret: <span className="output-highlight">sk_live_xyz123abc456</span></span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  Token Endpoint: <span className="output-highlight">https://mockauth.dev/oauth/token</span></span>
-                </div>
-                <div className="terminal-line">&nbsp;</div>
-                <div className="terminal-line">
-                  <span className="prompt">$</span> <span className="command">mockauth create saml-idp --entity-id &quot;myapp&quot;</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output-success">✓ SAML IdP created successfully!</span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  Entity ID: <span className="output-highlight">https://mockauth.dev/saml/myapp</span></span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  SSO URL: <span className="output-highlight">https://mockauth.dev/saml/myapp/sso</span></span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  Metadata: <span className="output-highlight">https://mockauth.dev/saml/myapp/metadata.xml</span></span>
-                </div>
-                <div className="terminal-line">
-                  <span className="output">  Auto-expires in: <span className="output-highlight">30 days</span></span>
-                </div>
-                <div className="terminal-line">&nbsp;</div>
-                <div className="terminal-line">
-                  <span className="prompt">$</span> <span className="cursor">█</span>
-                </div>
+              <div className="terminal-line">
+                <span className="output-success">✓ OAuth 2.0 App created successfully!</span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  App ID: <span className="output-highlight">app_abc123xyz</span></span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  Client ID: <span className="output-highlight">client_demo_xyz789</span></span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  Client Secret: <span className="output-highlight">sk_live_xyz123abc456</span></span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  Token Endpoint: <span className="output-highlight">https://mockauth.dev/oauth/token</span></span>
+              </div>
+              <div className="terminal-line">&nbsp;</div>
+              <div className="terminal-line">
+                <span className="prompt">$</span> <span className="command">mockauth create saml-idp --entity-id &quot;myapp&quot;</span>
+              </div>
+              <div className="terminal-line">
+                <span className="output-success">✓ SAML IdP created successfully!</span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  Entity ID: <span className="output-highlight">https://mockauth.dev/saml/myapp</span></span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  SSO URL: <span className="output-highlight">https://mockauth.dev/saml/myapp/sso</span></span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  Metadata: <span className="output-highlight">https://mockauth.dev/saml/myapp/metadata.xml</span></span>
+              </div>
+              <div className="terminal-line">
+                <span className="output">  Auto-expires in: <span className="output-highlight">30 days</span></span>
+              </div>
+              <div className="terminal-line">&nbsp;</div>
+              <div className="terminal-line">
+                <span className="prompt">$</span> <span className="cursor">█</span>
               </div>
             </div>
           </div>

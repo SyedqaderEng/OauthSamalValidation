@@ -145,15 +145,13 @@ nav .container {
 
 /* Hero Section */
 .hero {
-    padding: 160px 0 120px;
+    padding: 160px 0 80px;
     position: relative;
+    text-align: center;
 }
 
 .hero .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
+    max-width: 900px;
 }
 
 .hero-content h1 {
@@ -181,6 +179,7 @@ nav .container {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .btn-hero-primary {
@@ -219,9 +218,14 @@ nav .container {
     border-color: #8338ec;
 }
 
-/* Terminal Window */
-.hero-visual {
-    perspective: 1000px;
+/* Terminal Demo Section */
+.terminal-section {
+    padding: 60px 0 100px;
+    position: relative;
+}
+
+.terminal-section .container {
+    max-width: 1200px;
 }
 
 .terminal-window {
@@ -326,10 +330,6 @@ nav .container {
 }
 
 @media (max-width: 968px) {
-    .hero .container {
-        grid-template-columns: 1fr;
-    }
-
     .hero-content h1 {
         font-size: 42px;
     }
@@ -338,7 +338,12 @@ nav .container {
         display: none;
     }
 
-    .terminal-window {
-        display: none;
+    .terminal-body {
+        padding: 20px;
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 0 20px;
     }
 }
