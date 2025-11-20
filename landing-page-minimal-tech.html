@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthMock - Developer-First Auth Testing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            background: #0a0e27;
+            color: #e4e4e7;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Code-like accent */
+        .accent {
+            color: #00ff9f;
+            font-weight: 600;
+        }
+
+        .accent-alt {
+            color: #00d4ff;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            color: #00ff9f;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .logo:before {
+            content: "$ ";
+            color: #00d4ff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00ff9f;
+        }
+
+        .nav-cta {
+            background: transparent;
+            color: #00ff9f;
+            padding: 10px 25px;
+            border: 1px solid #00ff9f;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            background: #00ff9f;
+            color: #0a0e27;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 120px;
+            position: relative;
+        }
+
+        .terminal-window {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .terminal-header {
+            background: #0f172a;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 30px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 8px;
+        }
+
+        .prompt {
+            color: #00d4ff;
+        }
+
+        .command {
+            color: #00ff9f;
+        }
+
+        .output {
+            color: #94a3b8;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #00ff9f;
+            color: #0a0e27;
+            padding: 16px 35px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #e4e4e7;
+            padding: 16px 35px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            border: 1px solid #334155;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            border-color: #00ff9f;
+            color: #00ff9f;
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 100px 0;
+            background: #0f172a;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-tag {
+            color: #00ff9f;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .section-description {
+            color: #94a3b8;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 40px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .feature-box:hover {
+            border-color: #00ff9f;
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .feature-box h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #e4e4e7;
+        }
+
+        .feature-box p {
+            color: #94a3b8;
+            line-height: 1.7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #94a3b8;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .feature-list li:before {
+            content: "→ ";
+            color: #00ff9f;
+            margin-right: 10px;
+        }
+
+        /* Code Example Section */
+        .code-examples {
+            padding: 100px 0;
+            background: #0a0e27;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            background: #0f172a;
+            padding: 15px 20px;
+            border-bottom: 1px solid #334155;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .code-content {
+            padding: 25px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            margin: 0;
+        }
+
+        .code-keyword { color: #ff79c6; }
+        .code-string { color: #00ff9f; }
+        .code-function { color: #00d4ff; }
+        .code-comment { color: #6272a4; }
+
+        /* Tools Section */
+        .tools {
+            padding: 100px 0;
+            background: #0f172a;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 60px;
+        }
+
+        .tool-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 30px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .tool-card:hover {
+            border-color: #00d4ff;
+        }
+
+        .tool-card h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #00ff9f;
+        }
+
+        .tool-card p {
+            color: #94a3b8;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 100px 0;
+            background: #0a0e27;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 48px;
+            color: #00ff9f;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            color: #94a3b8;
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 0;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            text-align: center;
+            border-top: 1px solid #334155;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            margin-bottom: 25px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0e27;
+            padding: 80px 0 40px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #00ff9f;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: #00ff9f;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #1e293b;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">authmock</a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#api">API</a></li>
+            </ul>
+            <a href="#" class="nav-cta">Get API Key</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="command">npm install -g authmock-cli</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ authmock-cli installed successfully</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="command">authmock create oauth-app --name "My Test App"</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ OAuth App created:</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">  client_id: <span class="accent">abc123xyz</span></span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">  client_secret: <span class="accent">secret_xyz789</span></span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">  token_endpoint: <span class="accent-alt">https://authmock.dev/oauth/token</span></span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span style="animation: blink 1s infinite;">█</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <h1><span class="accent">Mock OAuth & SAML</span><br>for Development & Testing</h1>
+                <p>Production-ready authentication testing infrastructure. Create OAuth apps and SAML IdP/SP instances in seconds. No configuration required.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn-primary">Start Free Trial</a>
+                    <a href="#" class="btn-secondary">Read the Docs</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Features</div>
+                <h2 class="section-title">Built for Developers</h2>
+                <p class="section-description">Everything you need to test authentication flows without the overhead of maintaining your own infrastructure.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon">🔐</div>
+                    <h3>OAuth 2.0 Provider</h3>
+                    <p>Full-featured OAuth 2.0 authorization server. Test all grant types.</p>
+                    <ul class="feature-list">
+                        <li>Authorization Code Flow</li>
+                        <li>Client Credentials Flow</li>
+                        <li>PKCE Support</li>
+                        <li>Refresh Tokens</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>SAML 2.0 IdP/SP</h3>
+                    <p>Complete SAML testing environment. Both IdP and SP modes supported.</p>
+                    <ul class="feature-list">
+                        <li>SSO & SLO Flows</li>
+                        <li>Metadata Import/Export</li>
+                        <li>Attribute Mapping</li>
+                        <li>Certificate Management</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Setup</h3>
+                    <p>No configuration files. No deployment. Just API calls or CLI commands.</p>
+                    <ul class="feature-list">
+                        <li>REST API</li>
+                        <li>CLI Tool</li>
+                        <li>SDKs (Node, Python, Go)</li>
+                        <li>Web Dashboard</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Developer Tools</h3>
+                    <p>Free utilities for debugging and development. All client-side.</p>
+                    <ul class="feature-list">
+                        <li>JWT Decoder/Encoder</li>
+                        <li>SAML Assertion Parser</li>
+                        <li>X.509 Certificate Viewer</li>
+                        <li>Base64 Utilities</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Auto Lifecycle</h3>
+                    <p>Automated cleanup and data management. Email backups before expiry.</p>
+                    <ul class="feature-list">
+                        <li>30-Day Auto Expiry</li>
+                        <li>Pre-Deletion Backup</li>
+                        <li>One-Click Restore</li>
+                        <li>Export Anytime</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">👥</div>
+                    <h3>Team Features</h3>
+                    <p>Collaborate with your team. Role-based access and permissions.</p>
+                    <ul class="feature-list">
+                        <li>Multi-User Workspaces</li>
+                        <li>RBAC</li>
+                        <li>Audit Logs</li>
+                        <li>API Key Management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Examples -->
+    <section class="code-examples">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Integration</div>
+                <h2 class="section-title">Simple Integration</h2>
+            </div>
+
+            <div class="examples-grid">
+                <div class="code-block">
+                    <div class="code-header">OAuth Token Exchange</div>
+                    <div class="code-content">
+<pre><code><span class="code-keyword">const</span> response = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">'https://authmock.dev/oauth/token'</span>, {
+  <span class="code-keyword">method</span>: <span class="code-string">'POST'</span>,
+  <span class="code-keyword">headers</span>: {
+    <span class="code-string">'Content-Type'</span>: <span class="code-string">'application/x-www-form-urlencoded'</span>
+  },
+  <span class="code-keyword">body</span>: <span class="code-keyword">new</span> URLSearchParams({
+    <span class="code-keyword">grant_type</span>: <span class="code-string">'authorization_code'</span>,
+    <span class="code-keyword">code</span>: authCode,
+    <span class="code-keyword">client_id</span>: <span class="code-string">'your_client_id'</span>,
+    <span class="code-keyword">client_secret</span>: <span class="code-string">'your_secret'</span>
+  })
+});
+
+<span class="code-keyword">const</span> { access_token } = <span class="code-keyword">await</span> response.<span class="code-function">json</span>();</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">Create SAML IdP via API</div>
+                    <div class="code-content">
+<pre><code><span class="code-keyword">const</span> idp = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">'https://api.authmock.dev/saml/idp'</span>, {
+  <span class="code-keyword">method</span>: <span class="code-string">'POST'</span>,
+  <span class="code-keyword">headers</span>: {
+    <span class="code-string">'Authorization'</span>: <span class="code-string">'Bearer YOUR_API_KEY'</span>,
+    <span class="code-string">'Content-Type'</span>: <span class="code-string">'application/json'</span>
+  },
+  <span class="code-keyword">body</span>: JSON.<span class="code-function">stringify</span>({
+    <span class="code-keyword">name</span>: <span class="code-string">'My Test IdP'</span>,
+    <span class="code-keyword">entityId</span>: <span class="code-string">'https://myapp.com/saml'</span>,
+    <span class="code-keyword">acsUrl</span>: <span class="code-string">'https://myapp.com/saml/acs'</span>
+  })
+}).<span class="code-function">then</span>(r => r.<span class="code-function">json</span>());
+
+<span class="code-comment">// Download metadata</span>
+<span class="code-keyword">const</span> metadata = idp.metadataUrl;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools" id="tools">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Utilities</div>
+                <h2 class="section-title">Free Developer Tools</h2>
+                <p class="section-description">All tools run client-side in your browser. No data is sent to our servers.</p>
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h4>JWT Decoder</h4>
+                    <p>Decode and inspect JSON Web Tokens</p>
+                </div>
+                <div class="tool-card">
+                    <h4>JWT Encoder</h4>
+                    <p>Create and sign JWTs for testing</p>
+                </div>
+                <div class="tool-card">
+                    <h4>SAML Decoder</h4>
+                    <p>Parse SAML assertions and responses</p>
+                </div>
+                <div class="tool-card">
+                    <h4>SAML Encoder</h4>
+                    <p>Generate SAML requests and responses</p>
+                </div>
+                <div class="tool-card">
+                    <h4>Base64 Encoder/Decoder</h4>
+                    <p>Encode and decode Base64 strings</p>
+                </div>
+                <div class="tool-card">
+                    <h4>URL Encoder/Decoder</h4>
+                    <p>Handle URL encoding and decoding</p>
+                </div>
+                <div class="tool-card">
+                    <h4>XML Formatter</h4>
+                    <p>Format and validate XML metadata</p>
+                </div>
+                <div class="tool-card">
+                    <h4>Cert Inspector</h4>
+                    <p>View X.509 certificate details</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>99.9%</h3>
+                    <p>Uptime SLA</p>
+                </div>
+                <div class="stat-item">
+                    <h3>&lt; 100ms</h3>
+                    <p>Average Response Time</p>
+                </div>
+                <div class="stat-item">
+                    <h3>10k+</h3>
+                    <p>Active Developers</p>
+                </div>
+                <div class="stat-item">
+                    <h3>1M+</h3>
+                    <p>Tests Run Monthly</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Start Testing in <span class="accent">60 Seconds</span></h2>
+            <p>No credit card required. Free tier includes everything you need.</p>
+            <a href="#" class="btn-primary">Create Free Account</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Tools</h4>
+                    <ul>
+                        <li><a href="#">JWT Decoder</a></li>
+                        <li><a href="#">SAML Tools</a></li>
+                        <li><a href="#">OAuth Debugger</a></li>
+                        <li><a href="#">CLI</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Developers</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">SDKs</a></li>
+                        <li><a href="#">Examples</a></li>
+                        <li><a href="#">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AuthMock. Built for developers, by developers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</body>
+</html>
