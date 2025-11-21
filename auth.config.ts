@@ -3,7 +3,6 @@ import type { NextAuthConfig } from 'next-auth';
 export const authConfig = {
   pages: {
     signIn: '/login',
-    signUp: '/signup',
     error: '/error',
   },
   callbacks: {
