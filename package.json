@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:validation": "ts-node tests/run-validation.ts",
+    "test:oauth": "ts-node -e \"import('./tests/oauth-validator').then(m => new m.OAuth2Validator().runAll())\"",
+    "test:saml": "ts-node -e \"import('./tests/saml-validator').then(m => new m.SAML2Validator().runAll())\"",
+    "test:security": "ts-node -e \"import('./tests/security-validator').then(m => new m.SecurityValidator().runAllTests({}))\""
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
