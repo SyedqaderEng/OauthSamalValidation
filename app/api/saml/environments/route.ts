@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
+import { checkSamlEnvLimit, getMaxExpiry } from '@/lib/plan-limits';
 import { z } from 'zod';
 import crypto from 'crypto';
 
@@ -67,6 +68,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check plan limits
+    const limitCheck = await checkSamlEnvLimit(session.user.id);
+    if (!limitCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Plan limit reached', message: limitCheck.reason, current: limitCheck.current, limit: limitCheck.limit },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const validatedData = createEnvSchema.parse(body);
 
@@ -77,9 +87,10 @@ export async function POST(request: NextRequest) {
     // Generate URLs based on type
     const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}/saml`;
 
-    // Calculate expiry date
+    // Calculate expiry date based on user's plan
+    const maxExpiryDays = await getMaxExpiry(session.user.id);
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + parseInt(process.env.RESOURCE_EXPIRY_DAYS || '30'));
+    expiresAt.setDate(expiresAt.getDate() + maxExpiryDays);
 
     const environment = await prisma.samlEnvironment.create({
       data: {
