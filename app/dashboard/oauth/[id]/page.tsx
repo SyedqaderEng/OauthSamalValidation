@@ -43,7 +43,7 @@ async function getOAuthApp(id: string, userId: string) {
 export default async function OAuthAppDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const session = await auth();
 
@@ -51,7 +51,8 @@ export default async function OAuthAppDetailPage({
     redirect('/login');
   }
 
-  const app = await getOAuthApp(params.id, session.user.id);
+  const { id } = await params;
+  const app = await getOAuthApp(id, session.user.id);
 
   if (!app) {
     notFound();

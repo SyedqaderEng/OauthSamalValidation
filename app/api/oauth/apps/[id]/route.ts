@@ -13,7 +13,7 @@ const updateAppSchema = z.object({
 // GET /api/oauth/apps/[id] - Get a specific OAuth app
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -21,9 +21,11 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const app = await prisma.oAuthApp.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
         deletedAt: null,
       },
@@ -46,7 +48,7 @@ export async function GET(
 // PATCH /api/oauth/apps/[id] - Update an OAuth app
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -54,13 +56,14 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await request.json();
     const validatedData = updateAppSchema.parse(body);
 
     // Check if app exists and belongs to user
     const existingApp = await prisma.oAuthApp.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
         deletedAt: null,
       },
@@ -72,7 +75,7 @@ export async function PATCH(
 
     // Update the app
     const updatedApp = await prisma.oAuthApp.update({
-      where: { id: params.id },
+      where: { id },
       data: validatedData,
     });
 
@@ -104,7 +107,7 @@ export async function PATCH(
 // DELETE /api/oauth/apps/[id] - Delete an OAuth app
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -112,10 +115,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Check if app exists and belongs to user
     const existingApp = await prisma.oAuthApp.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
         deletedAt: null,
       },
@@ -127,7 +132,7 @@ export async function DELETE(
 
     // Soft delete
     await prisma.oAuthApp.update({
-      where: { id: params.id },
+      where: { id },
       data: { deletedAt: new Date() },
     });
 
