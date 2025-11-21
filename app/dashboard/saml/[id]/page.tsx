@@ -43,7 +43,7 @@ async function getSAMLEnvironment(id: string, userId: string) {
 export default async function SAMLEnvironmentDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const session = await auth();
 
@@ -51,7 +51,8 @@ export default async function SAMLEnvironmentDetailPage({
     redirect('/login');
   }
 
-  const env = await getSAMLEnvironment(params.id, session.user.id);
+  const { id } = await params;
+  const env = await getSAMLEnvironment(id, session.user.id);
 
   if (!env) {
     notFound();
