@@ -1,0 +1,78 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  username      String   @unique
+  passwordHash  String   @map("password_hash")
+  displayName   String?  @map("display_name")
+  createdAt     DateTime @default(now()) @map("created_at")
+  lastLoginAt   DateTime? @map("last_login_at")
+  
+  // Relations
+  samlLogs      SamlLog[]
+  
+  @@map("users")
+}
+
+model SamlEntity {
+  id            String   @id @default(uuid())
+  type          String   // 'SP' or 'IDP'
+  entityId      String   @unique @map("entity_id")
+  rawXml        String   @map("raw_xml") @db.Text
+  parsedJson    Json     @map("parsed_json")
+  ssoUrl        String?  @map("sso_url")
+  sloUrl        String?  @map("slo_url")
+  acsUrls       String[] @map("acs_urls")
+  certificates  String[] @db.Text
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  samlLogs      SamlLog[]
+  
+  @@map("saml_entities")
+}
+
+model SamlLog {
+  id          String   @id @default(uuid())
+  entityId    String   @map("entity_id")
+  userId      String?  @map("user_id")
+  eventType   String   @map("event_type") // 'LOGIN', 'LOGOUT', 'ERROR', 'SP_INITIATED', 'IDP_INITIATED'
+  status      String   // 'SUCCESS', 'FAILURE', 'PENDING'
+  details     Json     // Store SAML attributes, errors, etc.
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  user        User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  samlEntity  SamlEntity?   @relation(fields: [entityId], references: [entityId], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([entityId])
+  @@index([createdAt])
+  @@map("saml_logs")
+}
+
+model SamlConfig {
+  id                String   @id @default(uuid())
+  appRole           String   @map("app_role") // 'SP', 'IDP', or 'BOTH'
+  defaultEntityId   String   @map("default_entity_id")
+  signingKey        String?  @map("signing_key") @db.Text
+  signingCert       String?  @map("signing_cert") @db.Text
+  encryptionKey     String?  @map("encryption_key") @db.Text
+  encryptionCert    String?  @map("encryption_cert") @db.Text
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  
+  @@map("saml_config")
+}

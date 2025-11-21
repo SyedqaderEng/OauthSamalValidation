@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: saml_postgres
+    environment:
+      POSTGRES_USER: saml_user
+      POSTGRES_PASSWORD: saml_password
+      POSTGRES_DB: saml_platform
+    ports:
+      - "5433:5432"  # Using 5433 to avoid conflict with existing DB
+    volumes:
+      - saml_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saml_user -d saml_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: saml_backend
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://saml_user:saml_password@postgres:5432/saml_platform
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      FRONTEND_URL: http://localhost:3000
+      BACKEND_URL: http://localhost:3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./backend/certificates:/app/certificates
+    command: sh -c "npx prisma generate && npx prisma db push && npm run dev"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: saml_frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:3001
+    ports:
+      - "3002:3000"  # Using 3002 to avoid conflict with existing app
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+
+volumes:
+  saml_postgres_data:

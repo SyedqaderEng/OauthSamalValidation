@@ -1,0 +1,187 @@
+SAML TEST PLATFORM - COMPLETE PROJECT STRUCTURE
+================================================
+
+Root Directory:
+├── backend/                                 # Backend API Server
+│   ├── src/
+│   │   ├── api/                            # REST API Endpoints
+│   │   │   ├── auth.ts                     # Authentication (signup/login)
+│   │   │   ├── metadata.ts                 # Metadata import/export
+│   │   │   ├── saml.ts                     # SAML endpoints (SP & IdP)
+│   │   │   └── samlConfig.ts              # SAML configuration API
+│   │   ├── config/                         # Configuration Files
+│   │   │   ├── database.ts                 # Prisma client
+│   │   │   ├── env.ts                      # Environment config
+│   │   │   └── jwt.ts                      # JWT utilities
+│   │   ├── middleware/                     # Express Middleware
+│   │   │   └── auth.ts                     # Auth middleware
+│   │   ├── saml/                           # SAML Implementation
+│   │   │   ├── samlSp.ts                  # Service Provider
+│   │   │   ├── samlIdp.ts                 # Identity Provider
+│   │   │   ├── metadata.ts                 # Metadata parser
+│   │   │   ├── utils.ts                    # SAML utilities
+│   │   │   └── generateCertificate.ts     # Cert generation
+│   │   └── server.ts                       # Express server
+│   ├── prisma/
+│   │   └── schema.prisma                   # Database schema (4 models)
+│   ├── certificates/                       # SAML certificates (generated)
+│   ├── package.json                        # Dependencies
+│   ├── tsconfig.json                       # TypeScript config
+│   ├── Dockerfile                          # Docker image
+│   ├── .dockerignore                       # Docker ignore
+│   ├── .env                               # Environment variables
+│   └── .env.example                       # Env template
+│
+├── frontend/                               # React Frontend
+│   ├── src/
+│   │   ├── pages/                         # Page Components
+│   │   │   ├── Login.tsx                  # Login page
+│   │   │   ├── Signup.tsx                 # Signup page
+│   │   │   ├── Dashboard.tsx              # Main dashboard
+│   │   │   ├── ImportMetadata.tsx         # Import metadata
+│   │   │   ├── ExportMetadata.tsx         # Export metadata
+│   │   │   ├── SamlTestConsole.tsx        # SAML test console
+│   │   │   └── SamlCallback.tsx           # SAML callback
+│   │   ├── components/                    # Reusable Components
+│   │   │   └── SamlStatusCard.tsx         # SAML status
+│   │   ├── services/                      # API Services
+│   │   │   └── api.ts                     # API client
+│   │   ├── hooks/                         # React Hooks
+│   │   │   └── useAuth.tsx                # Auth context
+│   │   ├── types/                         # TypeScript Types
+│   │   │   └── index.ts                   # Type definitions
+│   │   ├── App.tsx                        # Main app + routing
+│   │   ├── index.tsx                      # React entry
+│   │   └── index.css                      # Global styles
+│   ├── public/
+│   │   └── index.html                     # HTML template
+│   ├── package.json                       # Dependencies
+│   ├── tsconfig.json                      # TypeScript config
+│   ├── tailwind.config.js                 # Tailwind CSS
+│   ├── postcss.config.js                  # PostCSS
+│   ├── Dockerfile                         # Docker image
+│   └── .dockerignore                      # Docker ignore
+│
+├── examples/                              # Sample Files
+│   ├── sample-sp-metadata.xml             # Example SP metadata
+│   └── sample-idp-metadata.xml            # Example IdP metadata
+│
+├── docker-compose.saml.yml                # Docker Compose
+├── setup-saml-platform.sh                 # Setup script
+├── SAML_PLATFORM_README.md                # Full documentation
+├── SAML_QUICK_START.md                    # Quick start guide
+├── SAML_PLATFORM_DELIVERABLES.md          # Deliverables list
+└── PROJECT_STRUCTURE.txt                  # This file
+
+DATABASE SCHEMA (Prisma):
+==========================
+1. users                - User accounts (local auth)
+2. saml_entities        - Imported SP/IdP metadata
+3. saml_logs            - SAML activity logs
+4. saml_config          - Application SAML configuration
+
+API ENDPOINTS:
+==============
+Authentication:
+  POST   /api/auth/signup
+  POST   /api/auth/login
+  GET    /api/auth/me
+  GET    /api/auth/saml-logs
+
+Metadata:
+  POST   /api/metadata/import
+  GET    /api/metadata/export/sp
+  GET    /api/metadata/export/idp
+  GET    /api/metadata/list
+  GET    /api/metadata/:entityId
+  DELETE /api/metadata/:entityId
+
+SAML Configuration:
+  GET    /api/saml-config
+  PUT    /api/saml-config
+
+SAML SP Endpoints:
+  GET    /saml/metadata
+  GET    /saml/login/:idpEntityId
+  POST   /saml/acs
+  GET    /saml/slo
+
+SAML IdP Endpoints:
+  GET    /saml/idp/metadata
+  GET    /saml/idp/sso
+  POST   /saml/idp/sso/process
+  GET    /saml/idp/slo
+
+Logs:
+  GET    /saml/logs
+
+FRONTEND ROUTES:
+================
+  /                      → Redirect to /dashboard
+  /login                 → Login page
+  /signup                → Signup page
+  /dashboard             → Main dashboard (protected)
+  /import-metadata       → Import metadata (protected)
+  /export-metadata       → Export metadata (protected)
+  /saml-console          → SAML test console (protected)
+  /saml-callback         → SAML callback handler
+
+TECH STACK:
+===========
+Backend:
+  • Node.js 18
+  • TypeScript 5
+  • Express 4
+  • Prisma (PostgreSQL ORM)
+  • samlify (SAML library)
+  • bcrypt (password hashing)
+  • jsonwebtoken (JWT)
+  • xml2js (XML parsing)
+
+Frontend:
+  • React 18
+  • TypeScript 4
+  • React Router 6
+  • Tailwind CSS 3
+  • Axios (HTTP client)
+
+Database:
+  • PostgreSQL 15
+
+DevOps:
+  • Docker
+  • Docker Compose
+
+FEATURES IMPLEMENTED:
+=====================
+✅ Local user authentication (signup/login)
+✅ SAML Service Provider (SP) mode
+✅ SAML Identity Provider (IdP) mode
+✅ Dual mode operation (BOTH)
+✅ Metadata import (upload & paste)
+✅ Metadata export (download & copy)
+✅ SP-initiated login flows
+✅ IdP-initiated login flows
+✅ SAML request/response logging
+✅ Interactive test console
+✅ User dashboard with activity
+✅ Entity management
+✅ Certificate generation
+✅ JWT authentication
+✅ Protected routes
+✅ Responsive UI
+✅ Docker containerization
+✅ Complete documentation
+
+FILE COUNT:
+===========
+Backend files:      ~20 files
+Frontend files:     ~15 files
+Config files:       ~10 files
+Documentation:      4 comprehensive guides
+Sample files:       2 metadata examples
+Total:             ~50+ files
+
+TOTAL LINES OF CODE: ~8,000+ lines
+
+STATUS: ✅ COMPLETE AND READY TO USE
