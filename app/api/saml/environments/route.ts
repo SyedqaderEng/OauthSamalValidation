@@ -13,7 +13,7 @@ const createEnvSchema = z.object({
   ssoUrl: z.string().url().optional(),
   sloUrl: z.string().url().optional(),
   idpMetadata: z.string().optional(), // XML string
-  attributeMappings: z.record(z.string()).optional(),
+  attributeMappings: z.record(z.string(), z.string()).optional(),
   nameIdFormat: z.string().default('urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'),
   assertionLifetime: z.number().default(600),
   signAssertions: z.boolean().default(true),
@@ -23,7 +23,7 @@ const createEnvSchema = z.object({
     email: z.string().email(),
     firstName: z.string(),
     lastName: z.string(),
-    customAttributes: z.record(z.string()).optional(),
+    customAttributes: z.record(z.string(), z.string()).optional(),
   })).optional(),
 });
 
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ environment }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Validation error', details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Validation error', details: error.issues }, { status: 400 });
     }
 
     console.error('Error creating SAML environment:', error);

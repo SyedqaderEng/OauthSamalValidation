@@ -51,7 +51,7 @@ export default function OAuthTester({ app }: OAuthTesterProps) {
     setResponse(null);
 
     try {
-      const res = await fetch('/api/oauth/token', {
+      const res = await fetch('/oauth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -90,7 +90,7 @@ export default function OAuthTester({ app }: OAuthTesterProps) {
     setResponse(null);
 
     try {
-      const res = await fetch('/api/oauth/token', {
+      const res = await fetch('/oauth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -127,7 +127,7 @@ export default function OAuthTester({ app }: OAuthTesterProps) {
     setError(null);
 
     try {
-      const res = await fetch('/api/oauth/token', {
+      const res = await fetch('/oauth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

@@ -102,7 +102,7 @@ export class CleanupService {
     // Group by user and send emails
     const userResources = new Map<string, any>();
 
-    oauthApps.forEach(app => {
+    oauthApps.forEach((app: any) => {
       if (!userResources.has(app.userId)) {
         userResources.set(app.userId, {
           user: app.user,
@@ -117,7 +117,7 @@ export class CleanupService {
       });
     });
 
-    samlEnvs.forEach(env => {
+    samlEnvs.forEach((env: any) => {
       if (!userResources.has(env.userId)) {
         userResources.set(env.userId, {
           user: env.user,

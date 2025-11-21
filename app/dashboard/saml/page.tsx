@@ -55,7 +55,7 @@ export default async function SAMLEnvironmentsPage() {
         </div>
       ) : (
         <div className="grid gap-6">
-          {environments.map((env) => (
+          {environments.map((env: any) => (
             <div
               key={env.id}
               className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition"

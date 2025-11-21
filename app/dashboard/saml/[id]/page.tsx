@@ -307,7 +307,7 @@ export default async function SAMLEnvironmentDetailPage({
             🎯 Attribute Mappings
           </h3>
           <div className="space-y-2">
-            {Object.entries(env.attributeMappings).map(([key, value]) => (
+            {Object.entries(env.attributeMappings).map(([key, value]: [string, any]) => (
               <div key={key} className="flex items-center gap-3 p-3 bg-black/30 rounded-lg border border-white/10">
                 <span className="px-3 py-1 rounded bg-purple-500/20 text-purple-400 text-sm font-medium min-w-[100px]">
                   {key}
@@ -360,7 +360,7 @@ export default async function SAMLEnvironmentDetailPage({
             🎫 Active SAML Sessions
           </h3>
           <div className="space-y-3">
-            {env.sessions.map((session) => (
+            {env.sessions.map((session: any) => (
               <div key={session.id} className="p-4 rounded-lg bg-black/30 border border-white/10">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-mono text-gray-400">

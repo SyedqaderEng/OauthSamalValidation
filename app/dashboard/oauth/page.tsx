@@ -15,7 +15,7 @@ async function getOAuthApps(userId: string) {
   });
 
   // Parse JSON strings for SQLite compatibility
-  return apps.map(app => ({
+  return apps.map((app: any) => ({
     ...app,
     grantTypes: JSON.parse(app.grantTypes),
     redirectUris: JSON.parse(app.redirectUris),
@@ -63,7 +63,7 @@ export default async function OAuthAppsPage() {
         </div>
       ) : (
         <div className="grid gap-6">
-          {apps.map((app) => (
+          {apps.map((app: any) => (
             <div
               key={app.id}
               className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
@@ -87,7 +87,7 @@ export default async function OAuthAppsPage() {
                 <div>
                   <label className="text-xs text-gray-500 block mb-1">Grant Types</label>
                   <div className="flex flex-wrap gap-1">
-                    {app.grantTypes.map((type) => (
+                    {app.grantTypes.map((type: string) => (
                       <span
                         key={type}
                         className="px-2 py-1 text-xs rounded bg-pink-500/20 text-pink-400 border border-pink-500/30"

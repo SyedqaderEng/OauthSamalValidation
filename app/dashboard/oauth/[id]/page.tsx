@@ -200,7 +200,7 @@ export default async function OAuthAppDetailPage({
             🔐 Grant Types
           </h3>
           <div className="flex flex-wrap gap-2">
-            {app.grantTypes.map((type) => (
+            {app.grantTypes.map((type: string) => (
               <span
                 key={type}
                 className="px-3 py-2 rounded-lg bg-pink-500/20 text-pink-400 border border-pink-500/30 text-sm font-medium"
@@ -220,7 +220,7 @@ export default async function OAuthAppDetailPage({
             🎯 Scopes
           </h3>
           <div className="flex flex-wrap gap-2">
-            {app.scopes.map((scope) => (
+            {app.scopes.map((scope: string) => (
               <span
                 key={scope}
                 className="px-3 py-2 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 text-sm font-medium"
@@ -301,7 +301,7 @@ export default async function OAuthAppDetailPage({
           🔗 Redirect URIs
         </h3>
         <div className="space-y-2">
-          {app.redirectUris.map((uri, index) => (
+          {app.redirectUris.map((uri: string, index: number) => (
             <div key={index} className="flex items-center gap-2">
               <code className="flex-1 bg-black/30 px-4 py-2 rounded-lg border border-white/10 font-mono text-sm break-all">
                 {uri}
@@ -322,7 +322,7 @@ export default async function OAuthAppDetailPage({
             🎫 Active Tokens
           </h3>
           <div className="space-y-3">
-            {app.tokens.map((token) => (
+            {app.tokens.map((token: any) => (
               <div key={token.id} className="p-4 rounded-lg bg-black/30 border border-white/10">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-mono text-gray-400">

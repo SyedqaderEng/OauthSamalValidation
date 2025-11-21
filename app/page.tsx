@@ -413,23 +413,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      <style jsx>{`
-        @keyframes slide-in-right {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        .animate-slide-in-right {
-          animation: slide-in-right 0.5s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

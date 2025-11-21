@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Parse JSON strings for arrays
-    const parsedApps = apps.map(app => ({
+    const parsedApps = apps.map((app: any) => ({
       ...app,
       grantTypes: JSON.parse(app.grantTypes),
       scopes: JSON.parse(app.scopes),
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Validation error', details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Validation error', details: error.issues }, { status: 400 });
     }
 
     console.error('Error creating OAuth app:', error);

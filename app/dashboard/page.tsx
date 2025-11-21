@@ -134,7 +134,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {oauthApps.map((app) => (
+            {oauthApps.map((app: any) => (
               <Link
                 key={app.id}
                 href={`/dashboard/oauth/${app.id}`}
@@ -174,7 +174,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {samlEnvironments.map((env) => (
+            {samlEnvironments.map((env: any) => (
               <Link
                 key={env.id}
                 href={`/dashboard/saml/${env.id}`}
