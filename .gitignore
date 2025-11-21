@@ -43,4 +43,9 @@ next-env.d.ts
 
 # database
 prisma/dev.db*
+dev.db*
+
+# environment files with secrets
 .env.local
+.env*.bak
+*.env.bak
