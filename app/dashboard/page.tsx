@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import SecurityTips from '@/components/SecurityTips';
 
 async function getDashboardData(userId: string) {
   const [oauthApps, samlEnvironments, recentActivity] = await Promise.all([
@@ -210,6 +211,12 @@ export default async function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* Security Tips */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Security Tips</h2>
+        <SecurityTips />
+      </div>
 
       {/* Empty State */}
       {oauthApps.length === 0 && samlEnvironments.length === 0 && (

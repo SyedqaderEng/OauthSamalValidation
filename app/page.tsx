@@ -40,6 +40,7 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a href="#features" className="text-gray-300 hover:text-white transition">Features</a>
             <a href="#pricing" className="text-gray-300 hover:text-white transition">Pricing</a>
+            <Link href="/dashboard/tools" className="text-gray-300 hover:text-white transition">Tools</Link>
             <a href="#demo" className="text-gray-300 hover:text-white transition">Demo</a>
             <Link href="/login" className="px-6 py-2 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:shadow-lg hover:shadow-pink-500/50 transition">
               Get Started Free
@@ -53,6 +54,9 @@ export default function Home() {
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
+              <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-pink-600/20 to-purple-600/20 border border-pink-500/30 text-pink-400 text-sm font-semibold mb-6">
+                Test. Validate. Ship Faster.
+              </div>
               <h1 className="text-7xl font-black mb-6 leading-tight">
                 <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-blue-500 bg-clip-text text-transparent">
                   OAuth & SAML
@@ -60,8 +64,11 @@ export default function Home() {
                 <br />
                 Testing Made Simple
               </h1>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+              <p className="text-xl text-gray-300 mb-4 leading-relaxed">
                 Create mock OAuth 2.0 and SAML 2.0 environments in seconds. Test authentication flows without the complexity of setting up real identity providers.
+              </p>
+              <p className="text-lg text-gray-400 mb-8 italic">
+                "Stop waiting for credentials. Start building."
               </p>
               <div className="flex gap-4">
                 <Link href="/signup" className="px-8 py-4 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:shadow-lg hover:shadow-pink-500/50 transition font-semibold">
@@ -100,6 +107,30 @@ export default function Home() {
                   <span>✓ Authentication successful</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 px-6 border-y border-white/5">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-black bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">10K+</div>
+              <div className="text-gray-400 text-sm mt-1">Developers</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">50K+</div>
+              <div className="text-gray-400 text-sm mt-1">Apps Created</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">1M+</div>
+              <div className="text-gray-400 text-sm mt-1">Auth Tests</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black bg-gradient-to-r from-cyan-400 to-green-400 bg-clip-text text-transparent">99.9%</div>
+              <div className="text-gray-400 text-sm mt-1">Uptime</div>
             </div>
           </div>
         </div>
@@ -352,13 +383,19 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-24 px-6">
         <div className="container mx-auto max-w-4xl text-center">
+          <div className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 text-green-400 text-sm font-semibold mb-6">
+            No Credit Card Required
+          </div>
           <h2 className="text-5xl font-black mb-6">
             <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-blue-500 bg-clip-text text-transparent">
               Ready to Start Testing?
             </span>
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl text-gray-300 mb-4">
             Join thousands of developers who trust MockAuth for their authentication testing needs.
+          </p>
+          <p className="text-lg text-gray-400 mb-8">
+            Setup takes less than 60 seconds. Cancel anytime.
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/signup" className="px-8 py-4 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:shadow-lg hover:shadow-pink-500/50 transition font-semibold text-lg">
@@ -409,7 +446,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-white/5 text-center text-gray-400 text-sm">
-            © 2024 MockAuth. All rights reserved.
+            © 2025 MockAuth. All rights reserved.
           </div>
         </div>
       </footer>
